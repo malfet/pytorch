@@ -277,6 +277,15 @@ else()
   endif()
 endif()
 
+# Strip relocatable FATBINS
+cuda_execute_process(
+  "Stripping nv_relfatbin ${generated_strip_file}"
+  COMMAND "objcopy"
+  --remove-relocations .nvFatBinSegment --remove-section __nv_relfatbin
+  "${generated_file}"
+  "${generated_strip_file}"
+)
+
 # Cubin resource report commands.
 if( build_cubin )
   # Run with -cubin to produce resource usage report.
