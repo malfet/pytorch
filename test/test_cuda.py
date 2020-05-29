@@ -2838,6 +2838,20 @@ t2.start()
     def test_to_numpy(self):
         self.assertRaises(TypeError, lambda: torch.empty(1, device="cuda").numpy())
 
+    def test_out_of_bounds_exception(self):
+        import subprocess
+        curdir = os.path.dirname(os.path.abspath(__file__))
+        test_path = os.path.join(curdir, 'bounds_test', 'cuda_bounds_test.py')
+
+        # Test in-bounds access succeeds
+        p = subprocess.run([sys.executable, test_path, '1'], capture_output=True, timeout=15)
+        self.assertEqual(p.returncode, 0, msg=f'run of {test_path} failed:{p.stdout}')
+        # Test out-of-bounds access fails
+        p = subprocess.run([sys.executable, test_path, '11'], capture_output=True, timeout=15)
+        self.assertNotEqual(p.returncode, 0, msg=f'run of {test_path} succeeded:{p.stdout}')
+        self.assertIn('cudaErrorAssert', p.stdout.decode('ascii'))
+        self.assertIn('"index out of bounds"', p.stderr.decode('ascii'))
+
 
 if __name__ == '__main__':
     run_tests()
