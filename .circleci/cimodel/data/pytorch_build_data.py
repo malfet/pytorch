@@ -84,11 +84,7 @@ CONFIG_TREE_DATA = [
         ("cuda", [
             ("10.2", [
                 ("3.9", [
-                    ("cuda_gcc_override", [
-                        ("gcc9", [
-                            ("shard_test", [XImportant(True)]),
-                        ]),
-                    ]),
+                    ("shard_test", [XImportant(True)]),
                 ]),
             ]),
         ]),
