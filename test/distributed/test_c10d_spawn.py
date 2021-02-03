@@ -43,6 +43,7 @@ if NO_MULTIPROCESSING_SPAWN:
 NO_NCCL = not hasattr(c10d, "ProcessGroupNCCL")
 
 
+@unittest.skipIf(sys.version_info >= (3, 9), "Fails on Python-3.9, see https://github.com/pytorch/pytorch/issues/51619")
 class ProcessGroupShareTensorTest(TestCase):
 
     world_size = 2
